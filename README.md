@@ -19,3 +19,13 @@ flowchart TD
     style E color:#FFFFFF, fill:#AA00FF, stroke:#AA00FF
     style I color:#FFFFFF, stroke:#2962FF, fill:#2962FF
     style L fill:#00C853,stroke:#00C853,color:#FFFFFF
+```
+
+![image](https://github.com/user-attachments/assets/b3429db6-917d-4e08-8a19-ec517417edc6)
+**[대기열 다이어그램 링크](https://www.mermaidchart.com/app/projects/100d9e03-3136-4578-90b4-2fa1d5595bb6/diagrams/95c31869-1abf-458c-85c6-bd54237bfb58/version/v0.1/edit)**
+
+![image](https://github.com/user-attachments/assets/1151c654-f60d-4715-bca6-e8dfb2e014a9)
+**[예매 다이어그램 링크](https://www.mermaidchart.com/app/projects/100d9e03-3136-4578-90b4-2fa1d5595bb6/diagrams/8e0b7df1-5377-4323-a58c-58b175e6dc05/version/v0.1/edit)**
+
+![image](https://github.com/user-attachments/assets/75e47f7b-c13d-4a33-9adb-2e2938c4f930)
+**[결재 다이어그램 링크](https://www.mermaidchart.com/app/projects/100d9e03-3136-4578-90b4-2fa1d5595bb6/diagrams/3d82a63e-9eb1-4a5a-8969-673014bd7d73/version/v0.1/edit)**
