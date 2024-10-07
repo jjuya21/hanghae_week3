@@ -1,6 +1,6 @@
 # hanghae_week3
 
-**예매하기**
+**예매하기 FLOW CHART**
 ```mermaid
 flowchart TD
     A["토큰 발급 API"] -- UUID 및 대기열 정보 포함 --> B["토큰 발급 완료"]
