@@ -21,14 +21,91 @@ flowchart TD
     style L fill:#00C853,stroke:#00C853,color:#FFFFFF
 ```
 
-![image](https://github.com/user-attachments/assets/b3429db6-917d-4e08-8a19-ec517417edc6)
+```mermaid
+sequenceDiagram
+    autonumber
+    actor 사용자 as 사용자
+    participant API
+    participant 대기열
 
-**[대기열 다이어그램 링크](https://www.mermaidchart.com/app/projects/100d9e03-3136-4578-90b4-2fa1d5595bb6/diagrams/95c31869-1abf-458c-85c6-bd54237bfb58/version/v0.1/edit)**
+    사용자 ->> API: 대기열 입장 API 요청
+    API ->> 대기열: 대기열 입장 요청
+    대기열 ->> 대기열: 대기열 토큰 조회
+    alt 기존 토큰 존재
+        대기열 -->> API: 기존 토큰 반환
+    else 기존 토큰 없음
+        대기열 ->> 대기열: 새 토큰 생성
+        대기열 -->> API: 새 토큰 반환
+    end
+    API -->> 사용자: 토큰 반환
 
-![image](https://github.com/user-attachments/assets/1151c654-f60d-4715-bca6-e8dfb2e014a9)
+    loop 대기열 순번 확인 API (N초마다 요청)
+        사용자 ->> API: 대기번호 확인 API 요청
+        API ->> 대기열: 대기번호 확인 요청
+        대기열 ->> 대기열: 대기열 조회
+        alt 대기열 통과
+            대기열 ->> 대기열: 토큰 상태 업데이트
+            대기열 -->> 사용자: 대기열 통과
+        else 대기열 대기
+            대기열 ->> 대기열: 순번 = 대기열 상태값이 WAITING 앞에 있는 토큰 수 + 1
+            대기열 -->> API: 몇번째 대기 순번인지 반환
+            API -->> 사용자: 몇번째 대기 순번인지 반환
+        end
+    end
+```
 
-**[예매 다이어그램 링크](https://www.mermaidchart.com/app/projects/100d9e03-3136-4578-90b4-2fa1d5595bb6/diagrams/8e0b7df1-5377-4323-a58c-58b175e6dc05/version/v0.1/edit)**
+```mermaid
+sequenceDiagram
+    autonumber
+    Actor User as 사용자
+    participant API
+    participant ReservationAPI as 예매
 
-![image](https://github.com/user-attachments/assets/75e47f7b-c13d-4a33-9adb-2e2938c4f930)
+    User ->> API: 날짜 요청 API
+    API ->> ReservationAPI: 날짜 요청
+    ReservationAPI -->> API: 예매 가능 날짜 반환
+    API -->> User: 예매 가능 날짜 반환
 
-**[결재 다이어그램 링크](https://www.mermaidchart.com/app/projects/100d9e03-3136-4578-90b4-2fa1d5595bb6/diagrams/3d82a63e-9eb1-4a5a-8969-673014bd7d73/version/v0.1/edit)**
+    User ->> API: 좌석 요청 API
+    API ->> ReservationAPI: 좌석 요청
+    ReservationAPI -->> API: 예매 가능 좌석 반환
+    API -->> User: 예매 가능 날짜 반환
+
+    User -> API: 좌석 예매 요청 API
+    API ->> ReservationAPI: 좌석 예매 요청
+    ReservationAPI ->> ReservationAPI: 좌석 상태 조회
+
+    alt 좌석이 선점 중이 아닐 때
+        ReservationAPI ->> ReservationAPI: 좌석 상태를 선점으로 업데이트
+        ReservationAPI -->> User: 결제 진행
+    else 좌석이 선점 중일 때
+        ReservationAPI -->> User: 예매 실패 반환
+    end
+```
+
+```mermaid
+sequenceDiagram
+    autonumber
+    Actor User as 사용자
+    participant API
+    participant 결제
+
+    User ->> API: 충전 API 요청
+    API ->> 결제: 충전 요청
+    결제 ->> 결제: 잔액 확인 / 충전
+    결제 -->> API: 충전 완료 반환
+    API -->> User: 충전 완료 반환
+
+    User ->> API: 결제 API 요청
+    API ->> 결제: 결제 요청
+    결제 ->> 결제: 잔액 검증
+
+    alt 잔액이 충분할 때
+        결제 ->> 결제: 결제
+        결제 -->> API: 결제내역 반환
+        API -->> User: 결제내역 반환
+    else 잔액이 부족할 때
+        결제 -->> API: 결제 실패 반환
+        API -->> User: 결제 실패 반환
+    end
+```
