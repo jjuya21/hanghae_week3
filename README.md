@@ -113,3 +113,74 @@ sequenceDiagram
         API -->> User: 결제 실패 반환
     end
 ```
+
+테이블 ERD
+```mermaid
+erDiagram
+    USER {
+        UUID id PK
+        string name
+    }
+
+    QUEUETOKEN {
+        UUID id PK
+        UUID user_id FK
+        int queue_position
+        string status
+        datetime expiry_time
+    }
+
+    CONCERT_ITEM {
+        UUID id PK
+        UUID concert_id FK
+        date concert_dates
+        string status
+    }
+
+    SEAT {
+        UUID id PK
+        UUID concert_item_id
+        int seat_number
+        int price
+        string status
+        datetime reservation_expiry_time
+    }
+
+    PAYMENT {
+        UUID id PK
+        UUID user_id FK
+        UUID concert_id FK
+        decimal amount
+        datetime payment_date
+    }
+
+    BALANCE {
+        UUID id PK
+        UUID user_id FK
+        decimal amount
+    }
+
+    CONCERT {
+        UUID id PK
+        string concert_title
+        date reservation_open
+        date reservation_end
+    }
+
+    RESERVATION {
+        UUID id PK
+        UUID user_id FK
+        UUID seat_id FK
+        date reservation_date
+        int pay_amount
+    }
+
+    %% Relationships
+    USER ||--o{ QUEUETOKEN : ""
+    USER ||--|| BALANCE : ""
+    CONCERT_ITEM ||--o{ SEAT : ""
+    SEAT ||--o{ RESERVATION : ""
+    CONCERT ||--o{ CONCERT_ITEM : ""
+    USER ||--o{ PAYMENT : ""
+    USER }o--o{ RESERVATION : ""
+```
